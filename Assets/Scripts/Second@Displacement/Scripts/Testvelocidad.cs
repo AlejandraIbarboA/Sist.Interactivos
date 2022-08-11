@@ -5,16 +5,21 @@ using UnityEngine;
 public class Testvelocidad : MonoBehaviour
 {
 
-    Vector position;
-    //[SerializeField] Vector displacement;
+    private Vector position;
     private Vector displacement;
-    [SerializeField] Vector velocity;
+    private Vector velocity;
+    [SerializeField] Vector acceleration;
+    private int state;
+
 
     private void Start()
     {
-        //displacement = velocity * (1f / 60f); //calcula el movimiento por frame, pierdee precision
-        displacement = velocity * (Time.deltaTime); //es mas preciso
         position = transform.position; //new MyVector(transform.position.x, transform.position.y);
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
     }
 
     private void Update()
@@ -22,25 +27,57 @@ public class Testvelocidad : MonoBehaviour
         //Debug vectors
         position.Draw(Color.red);
         displacement.Draw2(position, Color.green);
-        Move();
+        acceleration.Draw2(position, Color.blue);
+        velocity.Draw2(position, Color.cyan);
+        
     }
     public void Move()
     {
-        //calculate displacement and new position
-        position += displacement;
+        velocity = velocity + acceleration * Time.fixedDeltaTime;
+        position= position + velocity * Time.fixedDeltaTime;
         //check bounds
         if (Mathf.Abs(position.x) >= 5)
         {
             position.x = Mathf.Sign(position.x) * 5;
-            displacement.x *= -1;
+            velocity.x *= -1;
         }
         if (Mathf.Abs(position.y) >= 5)
         {
             position.y = Mathf.Sign(position.y) * 5;
-            displacement.y *= -1;
+            velocity.y *= -1;
         }
         //update position
         transform.position = position;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            switch (state)
+            {
+                case 0: 
+                    acceleration.x = -acceleration.y;
+                    velocity.y = 0;
+                    acceleration.y *= 0;
+                    state = 1;
+                    break;
+                case 1:
+                    acceleration.y = acceleration.x;
+                    velocity.x = 0;
+                    acceleration.x *= 0;
+                    state = 2;
+                    break;
+                case 2:
+                    acceleration.x = -acceleration.y;
+                    velocity.y = 0;
+                    acceleration.y *= 0;
+                    state=3;
+                    break;
+                case 3:
+                    acceleration.y = acceleration.x;
+                    velocity.y = 0;
+                    acceleration.y *= 0;
+                    state = 1;
+                    break;
+            }
+        }
 
     }
 }
