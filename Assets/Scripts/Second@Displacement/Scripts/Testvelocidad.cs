@@ -9,7 +9,14 @@ public class Testvelocidad : MonoBehaviour
     private Vector displacement;
     private Vector velocity;
     [SerializeField] Vector acceleration;
-    private int state;
+    private int currentIndex = 0;
+    Vector[] accelerations =
+    {
+        new Vector(0,-9.8f),
+        new Vector(9.8f,0f),
+        new Vector(0,9.8f),
+        new Vector(-9.8f,0f),
+    };
 
 
     private void Start()
@@ -29,7 +36,12 @@ public class Testvelocidad : MonoBehaviour
         displacement.Draw2(position, Color.green);
         acceleration.Draw2(position, Color.blue);
         velocity.Draw2(position, Color.cyan);
-        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            velocity *= 0;
+            acceleration = accelerations[(++currentIndex) % accelerations.Length];
+        }
+
     }
     public void Move()
     {
@@ -48,36 +60,10 @@ public class Testvelocidad : MonoBehaviour
         }
         //update position
         transform.position = position;
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            switch (state)
-            {
-                case 0: 
-                    acceleration.x = -acceleration.y;
-                    velocity.y = 0;
-                    acceleration.y *= 0;
-                    state = 1;
-                    break;
-                case 1:
-                    acceleration.y = acceleration.x;
-                    velocity.x = 0;
-                    acceleration.x *= 0;
-                    state = 2;
-                    break;
-                case 2:
-                    acceleration.x = -acceleration.y;
-                    velocity.y = 0;
-                    acceleration.y *= 0;
-                    state=3;
-                    break;
-                case 3:
-                    acceleration.y = acceleration.x;
-                    velocity.y = 0;
-                    acceleration.y *= 0;
-                    state = 1;
-                    break;
-            }
-        }
+        
 
     }
 }
+
+
+
