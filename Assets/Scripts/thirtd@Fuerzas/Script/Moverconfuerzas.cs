@@ -2,22 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Mover : MonoBehaviour
+public class Moverconfuerzas : MonoBehaviour
 {
-    [SerializeField] private Transform target;
     private Vector position;
     private Vector displacement;
-    [SerializeField] private Vector velocity;
-    [SerializeField] private Vector acceleration;
-    private int currentIndex = 0;
-    Vector[] accelerations =
-    {
-        new Vector(0,-9.8f),
-        new Vector(9.8f,0f),
-        new Vector(0,9.8f),
-        new Vector(-9.8f,0f),
-    };
-
+    private Vector velocity;
+    private Vector acceleration;
+    [SerializeField] private Vector wind;
+    [SerializeField] private Vector gravity;
+    [SerializeField] private float mass = 1;
+    [Range(0, 1)][SerializeField] private float damping;
+    
 
     private void Start()
     {
@@ -26,6 +21,8 @@ public class Mover : MonoBehaviour
 
     private void FixedUpdate()
     {
+        acceleration *= 0f;
+        ApplyForce(wind + gravity);
         Move();
     }
 
@@ -37,34 +34,29 @@ public class Mover : MonoBehaviour
         acceleration.Draw2(position, Color.blue);
         velocity.Draw2(position, Color.cyan);
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            velocity *= 0;
-            acceleration = accelerations[(++currentIndex) % accelerations.Length];
-        }
-        acceleration = target.position - transform.position;
-
-
-
     }
     public void Move()
     {
         velocity = velocity + acceleration * Time.fixedDeltaTime;
         position = position + velocity * Time.fixedDeltaTime;
         //check bounds
-        /*if (Mathf.Abs(position.x) >= 5)
+        if (Mathf.Abs(position.x) >= 5)
         {
             position.x = Mathf.Sign(position.x) * 5;
             velocity.x *= -1;
+            velocity *= damping;
         }
         if (Mathf.Abs(position.y) >= 5)
         {
             position.y = Mathf.Sign(position.y) * 5;
             velocity.y *= -1;
-        }*/
+            velocity *= damping;
+        }
         transform.position = position;
 
-
     }
-    
+    void ApplyForce (Vector Force)
+    {
+        acceleration += Force / mass;
+    }
 }
