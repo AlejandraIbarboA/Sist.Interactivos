@@ -8,11 +8,45 @@ public struct Vector
     public float x;
     public float y;
 
-    public Vector (float x, float y)
+    public Vector(float x, float y)
     {
         this.x = x;
         this.y = y;
     }
+
+    public void Normalize()
+    {
+        float magnitudeCache = magnitude;
+        if(magnitudeCache < 0.0001)
+        {
+            x = 0;
+            y = 0;
+            
+        }
+        else
+        {
+            x /= magnitudeCache;
+            y /= magnitudeCache;
+        }
+     
+    }
+    public float magnitude =>Mathf.Sqrt(x * x + y * y);
+
+    public Vector normalized
+    {
+        get
+        {
+
+            float distance = magnitude;
+            if (distance < 0.0001)
+            {              
+                return new Vector(0, 0);
+            }
+            return new Vector(x / magnitude, y / magnitude);
+
+        }
+    }
+
     public override string ToString()
     {
         return $"[{x},{y}]";

@@ -5,10 +5,11 @@ using UnityEngine;
 public class Mover : MonoBehaviour
 {
     [SerializeField] private Transform target;
-    private Vector position;
-    private Vector displacement;
     [SerializeField] private Vector velocity;
     [SerializeField] private Vector acceleration;
+    private Vector position;
+    private Vector displacement;
+
     private int currentIndex = 0;
     Vector[] accelerations =
     {
