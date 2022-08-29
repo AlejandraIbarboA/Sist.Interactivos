@@ -8,12 +8,15 @@ public class Moverfisicas : MonoBehaviour
     private Vector displacement;
     private Vector velocity;
     private Vector acceleration;
+    [SerializeField]private bool useFluidfriction = false;
     [SerializeField] private Vector wind;
     [SerializeField] private float mass = 1;
     [Range(0, 1)][SerializeField] private float damping;
     [SerializeField] private float gravedad;
     [SerializeField] float frictionCoefficient=0.5f;
-   
+    
+
+
 
     private void Start()
     {
@@ -23,15 +26,37 @@ public class Moverfisicas : MonoBehaviour
     private void FixedUpdate()
     {
         acceleration *= 0f;
-        float N = -mass * gravedad;
+        //apply gravity
+        float pesoescalar = mass * gravedad;
+        Vector peso = new Vector(0, pesoescalar);
+        ApplyForce(peso);    
 
-        Vector peso = new Vector(0, mass * gravedad);
-        Vector friction = velocity.normalized * frictionCoefficient * N * -1;
-        friction.Draw2(position, Color.green);
-        //ApplyForce(wind);
-        ApplyForce(peso);
-        ApplyForce(friction);
+        // aply fluid friction
+        if (useFluidfriction)
+        {
+            if (transform.position.y <= 0)
+            {
+                float frontalArea = transform.localScale.x;
+                float velocityMagnitude = velocity.magnitude;
+                Vector FluidFriction = velocity.normalized * frontalArea * velocityMagnitude*velocityMagnitude*-0.5f;
+                ApplyForce(FluidFriction);
+            }
+         
+        }
+        else      //apply friction
+        {
+            float N = -mass * gravedad;
+            Vector friction = velocity.normalized * frictionCoefficient * N * -1;
+            ApplyForce(friction);
+            //ApplyForce(wind);
+            friction.Draw2(position, Color.green);
+
+        }
+
+
         Move();
+
+      
     }
 
     private void Update()
