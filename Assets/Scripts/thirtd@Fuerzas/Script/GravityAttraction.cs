@@ -19,6 +19,7 @@ public class GravityAttraction : MonoBehaviour
         Vector r = target.transform.position - transform.position;
         float rmagntude =r.magnitude;
         Vector f = r.normalized* (target.mass * mass/rmagntude*rmagntude);
+        acceleration *= 0f;
         ApplyForce(f);
         f.Draw2(position, Color.blue);
 
@@ -33,13 +34,14 @@ public class GravityAttraction : MonoBehaviour
     {
         velocity = velocity + acceleration * Time.fixedDeltaTime;
         position = position + velocity * Time.fixedDeltaTime;
-        transform.position = position;
+       
         if (velocity.magnitude > 10)
         {
             velocity.Normalize();
             velocity *= 10;
         }
 
+        transform.position = position;
 
 
     }
