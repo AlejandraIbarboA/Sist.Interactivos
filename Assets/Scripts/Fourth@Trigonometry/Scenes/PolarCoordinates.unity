@@ -156,7 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   polarpoint: {x: 0, y: 0, z: 0}
   angularSpeed: 90
-  radialSpeed: 0.15
+  radialSpeed: 0.5
   radialAcceleration: 100
 --- !u!212 &877689797
 SpriteRenderer:

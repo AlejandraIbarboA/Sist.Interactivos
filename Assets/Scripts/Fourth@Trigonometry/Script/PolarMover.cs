@@ -54,6 +54,7 @@ public class PolarMover : MonoBehaviour
             if (Mathf.Abs(radialAcceleration) > 0)
             {
                 radialAcceleration = -radialAcceleration; //invertimos la aceleracion radial
+                radialSpeed *= -1;
             }
             else //invertimos si no hay aceleracion
             {
